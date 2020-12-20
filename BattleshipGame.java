@@ -24,10 +24,9 @@ public class BattleshipGame {
         }
         fillBattleShipBoard(FLEET);
         //printBoard(battleShipBoard);
-        boolean gameOver = false;
         initializeBattleShipBoardForDisplay();
         printBoard(battleShipBoardForDisplay);
-        while (!gameOver) {
+        while (true) {
             int areAllShipsSunk = 0;
             Scanner scanner = new Scanner(System.in);
             int x, y;
@@ -52,13 +51,12 @@ public class BattleshipGame {
                 }
             }
             }
-            printBoard(battleShipBoardForDisplay);
             if (areAllShipsSunk == 17) {
-                gameOver = true;
                 System.out.println("\r\rHurray!! YOU WON!!!!\r\nPress Enter to exit");
                 scanner.nextLine();
-
+                return;
             }
+            printBoard(battleShipBoardForDisplay);
         }
     }
 
@@ -69,7 +67,7 @@ public class BattleshipGame {
         }
         for (char c : ships
         ) {
-            int i = switch (c) {
+            int ship = switch (c) {
                 case 'A' -> 5;
                 case 'B' -> 4;
                 case 'D', 'S' -> 3;
@@ -79,43 +77,59 @@ public class BattleshipGame {
             int horizontalCoord = (int) (Math.random() * 10);
             int verticalCoord = (int) (Math.random() * 10);
             int alignHorizontalOrVertical = (int) (Math.random() * 2);
-            int ship = 0, j = 0;
+            //checks if the boat will go out of bounds, and providing a fix.
             boolean forward = true;
-            while (ship < i) {
+            if (alignHorizontalOrVertical == 0) {
+                if (verticalCoord + ship >= 10) {
+                    forward = false;
+                }
+            } else {
+                if (horizontalCoord + ship >= 10) {
+                    forward = false;
+                }
+            }
+            //checks if the boat will overlap with another one, and providing a fix.
+            boolean overlapping = true;
+            while (overlapping) {
+                overlapping = false;
+                int j = 0;
+                int i = 0;
+                while (i < ship) {
+                    if (alignHorizontalOrVertical == 0) {
+                        if (battleShipBoard[horizontalCoord][verticalCoord + j] != '-') {
+                            overlapping = true;
+                            horizontalCoord = (int) (Math.random() * 10);
+                            break;
+                        }
+                    } else {
+                        if (battleShipBoard[horizontalCoord + j][verticalCoord] != '-') {
+                            overlapping = true;
+                            verticalCoord = (int) (Math.random() * 10);
+                            break;
+                        }
+                    }
+                    if (forward) {
+                        j++;
+                    } else {
+                        j--;
+                    }
+                    i++;
+                }
+            }
+            //actually placing the boat element by element
+            int i = 0, j= 0;
+            while (i < ship) {
                 if (alignHorizontalOrVertical == 0) {
                     battleShipBoard[horizontalCoord][verticalCoord + j] = c;
-                    if (verticalCoord + i >= 10) {
-                        forward = !forward;
-                    }
                 } else {
                     battleShipBoard[horizontalCoord + j][verticalCoord] = c;
-                    if (horizontalCoord + i >= 10) {
-                        forward = !forward;
-                    }
                 }
                 if (forward) {
                     j++;
                 } else {
                     j--;
                 }
-                ship++;
-            }
-        }
-        int allShips = 17;
-        int areAllShipsPlacedCorrectly = 0;
-        //will loop until all boats are placed and not overlapping
-        while (areAllShipsPlacedCorrectly != allShips) {
-            for (char[] chars : battleShipBoard) {
-                for (char c : chars
-                ) {
-                    if (c != '-') {
-                        areAllShipsPlacedCorrectly++;
-                    }
-                }
-            }
-            if (areAllShipsPlacedCorrectly != allShips) {
-                areAllShipsPlacedCorrectly = 0;
-                fillBattleShipBoard(FLEET);
+                i++;
             }
         }
     }
@@ -127,7 +141,6 @@ public class BattleshipGame {
             Arrays.fill(chars, '-');
         }
     }
-
 
 
     private static void setBattleShipBoardForDisplay(int x, int y) throws InterruptedException {
@@ -165,62 +178,48 @@ public class BattleshipGame {
 
 
     private static void printSunkMessageIfSunk(int x, int y) throws InterruptedException {
-        if (battleShipBoard[x][y] == 'A') {
-            ACSunk++;
-            if (ACSunk == 5) {
-                char[] chars = "AircraftCarrier Sunk!!".toCharArray();
-                for (char c: chars
-                ) {
-                    System.out.print(c);
-                    Thread.sleep(200);
+        switch (battleShipBoard[x][y]) {
+            case 'A' -> {
+                ACSunk++;
+                if (ACSunk == 5) {
+                    printMesaage("AircraftCarrier sunk!!");
                 }
-                System.out.println();
             }
-        } else if (battleShipBoard[x][y] == 'B') {
-            BASHSunk++;
-            if (BASHSunk == 4) {
-                char[] chars = "BattleShip Sunk!!".toCharArray();
-                for (char c: chars
-                ) {
-                    System.out.print(c);
-                    Thread.sleep(200);
+            case 'B' -> {
+                BASHSunk++;
+                if (BASHSunk == 4) {
+                    printMesaage("Battleship sunk!!");
                 }
-                System.out.println();
             }
-        } else if (battleShipBoard[x][y] == 'D') {
-            DESunk++;
-            if (DESunk == 3) {
-                char[] chars = "Destroyer Sunk!!".toCharArray();
-                for (char c: chars
-                ) {
-                    System.out.print(c);
-                    Thread.sleep(200);
+            case 'D' -> {
+                DESunk++;
+                if (DESunk == 3) {
+                    printMesaage("Destroyer sunk!!");
                 }
-                System.out.println();
             }
-        } else if (battleShipBoard[x][y] == 'S') {
-            SUSunk++;
-            if (SUSunk == 3) {
-                char[] chars = "Submarine Sunk!!".toCharArray();
-                for (char c: chars
-                ) {
-                    System.out.print(c);
-                    Thread.sleep(200);
+            case 'S' -> {
+                SUSunk++;
+                if (SUSunk == 3) {
+                    printMesaage("Submarine sunk!!");
                 }
-                System.out.println();
             }
-        } else if (battleShipBoard[x][y] == 'P') {
-            PBSunk++;
-            if (PBSunk == 2) {
-                char[] chars = "PatrolBoat Sunk!!".toCharArray();
-                for (char c: chars
-                ) {
-                    System.out.print(c);
-                    Thread.sleep(200);
+            case 'P' -> {
+                PBSunk++;
+                if (PBSunk == 2) {
+                    printMesaage("PatrolBoat sunk!!");
                 }
-                System.out.println();
             }
         }
-    }
+   }
+
+
+   private static void printMesaage(String s) throws InterruptedException {
+       for (char c: s.toCharArray()
+                ) {
+                    System.out.print(c);
+                    Thread.sleep(200);
+                }
+                System.out.println();
+   }
 }
 
