@@ -27,7 +27,7 @@ public class BattleshipGame {
         fillBattleShipBoard(FLEET);
         printBoard(battleShipBoard);
         initializeBattleShipBoardForDisplay();
-        printBoard(battleShipBoardForDisplay);
+        //printBoard(battleShipBoardForDisplay);
         while (true) {
             int areAllShipsSunk = 0;
             Scanner scanner = new Scanner(System.in);
