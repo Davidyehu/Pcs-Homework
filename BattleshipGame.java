@@ -9,7 +9,6 @@ public class BattleshipGame {
     private static final int[] BOATHITS = new int[BOATLENGTHS.length];
     private final static char[][] battleShipBoard = new char[10][10];
     private final static char[][] battleShipBoardForDisplay = new char[10][10];
-    private static int ACSunk = 0, BASHSunk = 0, DESunk = 0, SUSunk = 0, PBSunk = 0;
 
     public static void main(String[] args) throws InterruptedException {
         String[] gameOpening = {"        ~~~Battleship~~~  ", "Inspired by Shmuel Toporowitch's and Dovid Rosenberg's videos on slack and by the instructor doing it in class.", "There are five boats hiding in the sea, your job is to locate them and attack.", "The sea is marked with coordinates, you have to guess a row and then a column to spot and attack ships.", "If you hit a boat, the coordinate of the attacked boat will be marked with the ships initial.", "If you miss it will be marked with \"*\".", "Boats are: AircraftCarrier of 5 coordinates length, Battleship of 4 length, Destroyer of 3, Submarine of 3, PatrolBoat of 2.", "Find all the Boats to Win!! Good Luck!!!!"};
