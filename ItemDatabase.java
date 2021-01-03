@@ -1,7 +1,7 @@
 package util.Orders;
 
 
-public class ItemDatabase extends Item {
+public class ItemDatabase {
     private static ItemDatabase itemDatabase = new ItemDatabase();
     Item[] items = new Item[1000];
     int[] quantity = new int[items.length];
